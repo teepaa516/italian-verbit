@@ -208,6 +208,13 @@ if "was_correct" not in st.session_state:
     st.session_state.was_correct = False
 if "last_correct_form" not in st.session_state:
     st.session_state.last_correct_form = ""
+# Keys for MC options and choice persistence
+if "mc_options" not in st.session_state:
+    st.session_state.mc_options = None  # type: Optional[List[str]]
+if "mc_for_idx" not in st.session_state:
+    st.session_state.mc_for_idx = None
+if "mc_choice" not in st.session_state:
+    st.session_state.mc_choice = None
 
 def restart_round():
     st.session_state.idx = 0
@@ -217,6 +224,9 @@ def restart_round():
     st.session_state.show_hint = False
     st.session_state.checked = False
     st.session_state.last_correct_form = ""
+    st.session_state.mc_options = None
+    st.session_state.mc_for_idx = None
+    st.session_state.mc_choice = None
     st.rerun()
 
 def go_next():
@@ -224,6 +234,9 @@ def go_next():
     st.session_state.show_hint = False
     st.session_state.checked = False
     st.session_state.last_correct_form = ""
+    st.session_state.mc_options = None
+    st.session_state.mc_for_idx = None
+    st.session_state.mc_choice = None
     if st.session_state.idx >= len(st.session_state.current_set):
         st.session_state.finished = True
     st.rerun()
@@ -299,13 +312,31 @@ if mode == "Kirjoitusharjoitus":
                 go_next()
 
 else:  # Monivalinta
-    options = {correct}
-    while len(options) < 4 and len(options) < len(cards_all):
-        d = random.choice(cards_all)
-        options.add(expected_form(d))
-    opts = list(options)
-    random.shuffle(opts)
-    choice = st.radio("Valitse oikea muoto", opts, index=0, key=f"mc_{st.session_state.idx}")
+    # Build stable options for the CURRENT card and keep them until we go to next
+    if st.session_state.mc_options is None or st.session_state.mc_for_idx != st.session_state.idx:
+        options = {correct}
+        # collect distractors from the pool of all cards
+        pool = []
+        for d in cards_all:
+            try:
+                pool.append(expected_form(d))
+            except Exception:
+                pass
+        random.shuffle(pool)
+        for form in pool:
+            if len(options) >= 4:
+                break
+            if normalize(form) != normalize(correct):
+                options.add(form)
+        opts = list(options)
+        random.shuffle(opts)
+        st.session_state.mc_options = opts
+        st.session_state.mc_for_idx = st.session_state.idx
+        st.session_state.mc_choice = None
+
+    opts = st.session_state.mc_options
+    # Do not preselect; let user choose
+    choice = st.radio("Valitse oikea muoto", opts, index=None, key="mc_choice")
 
     if st.session_state.checked:
         if st.session_state.was_correct:
@@ -327,14 +358,17 @@ else:  # Monivalinta
         c1, c2 = st.columns(2)
         with c1:
             if st.button("Vastaa"):
-                is_ok = normalize(choice) == normalize(correct)
-                st.session_state.was_correct = is_ok
-                st.session_state.last_correct_form = correct
-                st.session_state.progress.update(card, is_ok)
-                save_progress(st.session_state.progress)
-                st.session_state.checked = True
-                if is_ok:
-                    st.session_state.correct_count += 1
+                if choice is None:
+                    st.warning("Valitse jokin vaihtoehto ensin.")
+                else:
+                    is_ok = normalize(choice) == normalize(correct)
+                    st.session_state.was_correct = is_ok
+                    st.session_state.last_correct_form = correct
+                    st.session_state.progress.update(card, is_ok)
+                    save_progress(st.session_state.progress)
+                    st.session_state.checked = True
+                    if is_ok:
+                        st.session_state.correct_count += 1
         with c2:
             if st.button("Ohita"):
                 st.session_state.progress.update(card, False)
