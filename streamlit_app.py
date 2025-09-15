@@ -210,11 +210,9 @@ if "last_correct_form" not in st.session_state:
     st.session_state.last_correct_form = ""
 # Keys for MC options and choice persistence
 if "mc_options" not in st.session_state:
-    st.session_state.mc_options = None  # type: Optional[List[str]]
+    st.session_state.mc_options = None  # Optional[List[str]]
 if "mc_for_idx" not in st.session_state:
     st.session_state.mc_for_idx = None
-if "mc_choice" not in st.session_state:
-    st.session_state.mc_choice = None
 
 def restart_round():
     st.session_state.idx = 0
@@ -226,7 +224,9 @@ def restart_round():
     st.session_state.last_correct_form = ""
     st.session_state.mc_options = None
     st.session_state.mc_for_idx = None
-    st.session_state.mc_choice = None
+    # Remove radio widget state safely (cannot assign None)
+    if "mc_choice" in st.session_state:
+        st.session_state.pop("mc_choice")
     st.rerun()
 
 def go_next():
@@ -236,7 +236,8 @@ def go_next():
     st.session_state.last_correct_form = ""
     st.session_state.mc_options = None
     st.session_state.mc_for_idx = None
-    st.session_state.mc_choice = None
+    if "mc_choice" in st.session_state:
+        st.session_state.pop("mc_choice")
     if st.session_state.idx >= len(st.session_state.current_set):
         st.session_state.finished = True
     st.rerun()
@@ -332,7 +333,8 @@ else:  # Monivalinta
         random.shuffle(opts)
         st.session_state.mc_options = opts
         st.session_state.mc_for_idx = st.session_state.idx
-        st.session_state.mc_choice = None
+        if "mc_choice" in st.session_state:
+            st.session_state.pop("mc_choice")
 
     opts = st.session_state.mc_options
     # Do not preselect; let user choose
@@ -358,10 +360,11 @@ else:  # Monivalinta
         c1, c2 = st.columns(2)
         with c1:
             if st.button("Vastaa"):
-                if choice is None:
+                if "mc_choice" not in st.session_state or st.session_state.mc_choice is None:
                     st.warning("Valitse jokin vaihtoehto ensin.")
                 else:
-                    is_ok = normalize(choice) == normalize(correct)
+                    pick = st.session_state.mc_choice
+                    is_ok = normalize(pick) == normalize(correct)
                     st.session_state.was_correct = is_ok
                     st.session_state.last_correct_form = correct
                     st.session_state.progress.update(card, is_ok)
