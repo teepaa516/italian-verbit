@@ -170,25 +170,58 @@ def pick_due_cards(cards: List[Card], prog: Progress, n: int) -> List[Card]:
             break
     return out
 
-# ----- UI -----
-st.title("🇮🇹 Italian epäsäännölliset verbit – harjoitukset")
+# ----- Load verbs & progress -----
 verbs = load_data()
-
 if "progress" not in st.session_state:
     st.session_state.progress = load_progress()
 
+# ----- Sidebar: settings + verb selection -----
 with st.sidebar:
     st.header("Asetukset")
     mode = st.radio("Harjoitustila", ["Kirjoitusharjoitus", "Monivalinta"], horizontal=False)
     chosen_tenses = st.multiselect("Aikamuodot", TENSES_ALL, default=TENSES_ALL)
     n_questions = st.slider("Kierroksen pituus", 5, 30, 12)
-    st.caption("Vinkki: voit rajata aikamuotoja esim. pelkkä 'presente' + 'imperativo'.")
+
+    st.divider()
+    st.subheader("Valitse verbit")
+    st.caption("Ruksatut verbit ovat mukana kierroksella.")
+    # initialize checkboxes once
+    for v in verbs:
+        key = f"vb_{v.infinitive}"
+        if key not in st.session_state:
+            st.session_state[key] = True  # oletuksena kaikki mukana
+
+    col_sel_all, col_sel_none = st.columns(2)
+    with col_sel_all:
+        if st.button("Valitse kaikki"):
+            for v in verbs:
+                st.session_state[f"vb_{v.infinitive}"] = True
+    with col_sel_none:
+        if st.button("Tyhjennä"):
+            for v in verbs:
+                st.session_state[f"vb_{v.infinitive}"] = False
+
+    # show checkboxes (two columns to save space)
+    colA, colB = st.columns(2)
+    for i, v in enumerate(verbs):
+        target_col = colA if i % 2 == 0 else colB
+        with target_col:
+            st.checkbox(f"{v.infinitive} ({v.translation_fi})", key=f"vb_{v.infinitive}")
+
     if st.button("Nollaa edistyminen"):
         st.session_state.progress = Progress()
         save_progress(st.session_state.progress)
         st.success("Edistyminen nollattu.")
 
-cards_all = make_cards(verbs, chosen_tenses)
+# Build selected verb list
+selected_verbs = [v for v in verbs if st.session_state.get(f"vb_{v.infinitive}", False)]
+if not selected_verbs:
+    st.warning("Valitse vähintään yksi verbi sivupalkista aloittaaksesi harjoituksen.")
+    st.stop()
+
+cards_all = make_cards(selected_verbs, chosen_tenses)
+
+# Build round set (spaced repetition weighted)
 round_cards = pick_due_cards(cards_all, st.session_state.progress, n_questions)
 
 # Session-state init
@@ -219,7 +252,10 @@ def restart_round():
     st.session_state.idx = 0
     st.session_state.correct_count = 0
     st.session_state.finished = False
-    st.session_state.current_set = pick_due_cards(cards_all, st.session_state.progress, n_questions)
+    # rebuild cards based on current selections
+    selected_now = [v for v in verbs if st.session_state.get(f"vb_{v.infinitive}", False)]
+    all_cards_now = make_cards(selected_now, chosen_tenses)
+    st.session_state.current_set = pick_due_cards(all_cards_now, st.session_state.progress, n_questions)
     st.session_state.show_hint = False
     st.session_state.checked = False
     st.session_state.last_correct_form = ""
@@ -341,7 +377,8 @@ else:  # Monivalinta
         options = {correct}
         # collect distractors from the pool of all cards
         pool = []
-        for d in cards_all:
+        # use currently selected verbs only to keep distractors relevant
+        for d in make_cards(selected_verbs, chosen_tenses):
             try:
                 pool.append(expected_form(d))
             except Exception:
