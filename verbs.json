@@ -1,0 +1,611 @@
+[
+  {
+    "infinitive": "essere",
+    "translation_fi": "olla",
+    "present": [
+      "sono",
+      "sei",
+      "è",
+      "siamo",
+      "siete",
+      "sono"
+    ],
+    "noi_present": "siamo",
+    "auxiliary": "essere",
+    "past_participle": "stato",
+    "imperative": {
+      "tu": "sii",
+      "noi": "siamo",
+      "voi": "siate"
+    },
+    "notes": "Imperfetto on epäsäännöllinen: ero, eri, era, eravamo, eravate, erano",
+    "irregular_imperfect": [
+      "ero",
+      "eri",
+      "era",
+      "eravamo",
+      "eravate",
+      "erano"
+    ]
+  },
+  {
+    "infinitive": "avere",
+    "translation_fi": "omistaa, olla jollakulla",
+    "present": [
+      "ho",
+      "hai",
+      "ha",
+      "abbiamo",
+      "avete",
+      "hanno"
+    ],
+    "noi_present": "abbiamo",
+    "auxiliary": "avere",
+    "past_participle": "avuto",
+    "imperative": {
+      "tu": "abbi",
+      "noi": "abbiamo",
+      "voi": "abbiate"
+    }
+  },
+  {
+    "infinitive": "andare",
+    "translation_fi": "mennä",
+    "present": [
+      "vado",
+      "vai",
+      "va",
+      "andiamo",
+      "andate",
+      "vanno"
+    ],
+    "noi_present": "andiamo",
+    "auxiliary": "essere",
+    "past_participle": "andato",
+    "imperative": {
+      "tu": "va'",
+      "noi": "andiamo",
+      "voi": "andate"
+    }
+  },
+  {
+    "infinitive": "fare",
+    "translation_fi": "tehdä",
+    "present": [
+      "faccio",
+      "fai",
+      "fa",
+      "facciamo",
+      "fate",
+      "fanno"
+    ],
+    "noi_present": "facciamo",
+    "auxiliary": "avere",
+    "past_participle": "fatto",
+    "imperative": {
+      "tu": "fa'",
+      "noi": "facciamo",
+      "voi": "fate"
+    }
+  },
+  {
+    "infinitive": "dire",
+    "translation_fi": "sanoa",
+    "present": [
+      "dico",
+      "dici",
+      "dice",
+      "diciamo",
+      "dite",
+      "dicono"
+    ],
+    "noi_present": "diciamo",
+    "auxiliary": "avere",
+    "past_participle": "detto",
+    "imperative": {
+      "tu": "di'",
+      "noi": "diciamo",
+      "voi": "dite"
+    }
+  },
+  {
+    "infinitive": "venire",
+    "translation_fi": "tulla",
+    "present": [
+      "vengo",
+      "vieni",
+      "viene",
+      "veniamo",
+      "venite",
+      "vengono"
+    ],
+    "noi_present": "veniamo",
+    "auxiliary": "essere",
+    "past_participle": "venuto",
+    "imperative": {
+      "tu": "vieni",
+      "noi": "veniamo",
+      "voi": "venite"
+    }
+  },
+  {
+    "infinitive": "bere",
+    "translation_fi": "juoda",
+    "present": [
+      "bevo",
+      "bevi",
+      "beve",
+      "beviamo",
+      "bevete",
+      "bevono"
+    ],
+    "noi_present": "beviamo",
+    "auxiliary": "avere",
+    "past_participle": "bevuto",
+    "imperative": {
+      "tu": "bevi",
+      "noi": "beviamo",
+      "voi": "bevete"
+    }
+  },
+  {
+    "infinitive": "dare",
+    "translation_fi": "antaa",
+    "present": [
+      "do",
+      "dai",
+      "dà",
+      "diamo",
+      "date",
+      "danno"
+    ],
+    "noi_present": "diamo",
+    "auxiliary": "avere",
+    "past_participle": "dato",
+    "imperative": {
+      "tu": "da'",
+      "noi": "diamo",
+      "voi": "date"
+    }
+  },
+  {
+    "infinitive": "stare",
+    "translation_fi": "olla, voida",
+    "present": [
+      "sto",
+      "stai",
+      "sta",
+      "stiamo",
+      "state",
+      "stanno"
+    ],
+    "noi_present": "stiamo",
+    "auxiliary": "essere",
+    "past_participle": "stato",
+    "imperative": {
+      "tu": "sta'",
+      "noi": "stiamo",
+      "voi": "state"
+    }
+  },
+  {
+    "infinitive": "sapere",
+    "translation_fi": "tietää, osata",
+    "present": [
+      "so",
+      "sai",
+      "sa",
+      "sappiamo",
+      "sapete",
+      "sanno"
+    ],
+    "noi_present": "sappiamo",
+    "auxiliary": "avere",
+    "past_participle": "saputo",
+    "imperative": {
+      "tu": "sappi",
+      "noi": "sappiamo",
+      "voi": "sappiate"
+    }
+  },
+  {
+    "infinitive": "uscire",
+    "translation_fi": "lähteä ulos",
+    "present": [
+      "esco",
+      "esci",
+      "esce",
+      "usciamo",
+      "uscite",
+      "escono"
+    ],
+    "noi_present": "usciamo",
+    "auxiliary": "essere",
+    "past_participle": "uscito",
+    "imperative": {
+      "tu": "esci",
+      "noi": "usciamo",
+      "voi": "uscite"
+    }
+  },
+  {
+    "infinitive": "tenere",
+    "translation_fi": "pitää, pitää kiinni",
+    "present": [
+      "tengo",
+      "tieni",
+      "tiene",
+      "teniamo",
+      "tenete",
+      "tengono"
+    ],
+    "noi_present": "teniamo",
+    "auxiliary": "avere",
+    "past_participle": "tenuto",
+    "imperative": {
+      "tu": "tieni",
+      "noi": "teniamo",
+      "voi": "tenete"
+    }
+  },
+  {
+    "infinitive": "rimanere",
+    "translation_fi": "jäädä",
+    "present": [
+      "rimango",
+      "rimani",
+      "rimane",
+      "rimaniamo",
+      "rimanete",
+      "rimangono"
+    ],
+    "noi_present": "rimaniamo",
+    "auxiliary": "essere",
+    "past_participle": "rimasto",
+    "imperative": {
+      "tu": "rimani",
+      "noi": "rimaniamo",
+      "voi": "rimanete"
+    }
+  },
+  {
+    "infinitive": "scegliere",
+    "translation_fi": "valita",
+    "present": [
+      "scelgo",
+      "scegli",
+      "sceglie",
+      "scegliamo",
+      "scegliete",
+      "scelgono"
+    ],
+    "noi_present": "scegliamo",
+    "auxiliary": "avere",
+    "past_participle": "scelto",
+    "imperative": {
+      "tu": "scegli",
+      "noi": "scegliamo",
+      "voi": "scegliete"
+    }
+  },
+  {
+    "infinitive": "porre",
+    "translation_fi": "asettaa",
+    "present": [
+      "pongo",
+      "poni",
+      "pone",
+      "poniamo",
+      "ponete",
+      "pongono"
+    ],
+    "noi_present": "poniamo",
+    "auxiliary": "avere",
+    "past_participle": "posto",
+    "imperative": {
+      "tu": "poni",
+      "noi": "poniamo",
+      "voi": "ponete"
+    }
+  },
+  {
+    "infinitive": "trarre",
+    "translation_fi": "vetää, johtaa (ottaa esiin)",
+    "present": [
+      "traggo",
+      "trai",
+      "trae",
+      "traiamo",
+      "traete",
+      "traggono"
+    ],
+    "noi_present": "traiamo",
+    "auxiliary": "avere",
+    "past_participle": "tratto",
+    "imperative": {
+      "tu": "trai",
+      "noi": "traiamo",
+      "voi": "traete"
+    }
+  },
+  {
+    "infinitive": "tradurre",
+    "translation_fi": "kääntää",
+    "present": [
+      "traduco",
+      "traduci",
+      "traduce",
+      "traduciamo",
+      "traducete",
+      "traducono"
+    ],
+    "noi_present": "traduciamo",
+    "auxiliary": "avere",
+    "past_participle": "tradotto",
+    "imperative": {
+      "tu": "traduci",
+      "noi": "traduciamo",
+      "voi": "traducete"
+    }
+  },
+  {
+    "infinitive": "proporre",
+    "translation_fi": "ehdottaa",
+    "present": [
+      "propongo",
+      "proponi",
+      "propone",
+      "proponiamo",
+      "proponete",
+      "propongono"
+    ],
+    "noi_present": "proponiamo",
+    "auxiliary": "avere",
+    "past_participle": "proposto",
+    "imperative": {
+      "tu": "proponi",
+      "noi": "proponiamo",
+      "voi": "proponete"
+    }
+  },
+  {
+    "infinitive": "produrre",
+    "translation_fi": "tuottaa",
+    "present": [
+      "produco",
+      "produci",
+      "produce",
+      "produciamo",
+      "producete",
+      "producono"
+    ],
+    "noi_present": "produciamo",
+    "auxiliary": "avere",
+    "past_participle": "prodotto",
+    "imperative": {
+      "tu": "produci",
+      "noi": "produciamo",
+      "voi": "producete"
+    }
+  },
+  {
+    "infinitive": "condurre",
+    "translation_fi": "johtaa",
+    "present": [
+      "conduco",
+      "conduci",
+      "conduce",
+      "conduciamo",
+      "conducete",
+      "conducono"
+    ],
+    "noi_present": "conduciamo",
+    "auxiliary": "avere",
+    "past_participle": "condotto",
+    "imperative": {
+      "tu": "conduci",
+      "noi": "conduciamo",
+      "voi": "conducete"
+    }
+  },
+  {
+    "infinitive": "mettere",
+    "translation_fi": "laittaa, asettaa",
+    "present": [
+      "metto",
+      "metti",
+      "mette",
+      "mettiamo",
+      "mettete",
+      "mettono"
+    ],
+    "noi_present": "mettiamo",
+    "auxiliary": "avere",
+    "past_participle": "messo",
+    "imperative": {
+      "tu": "metti",
+      "noi": "mettiamo",
+      "voi": "mettete"
+    }
+  },
+  {
+    "infinitive": "prendere",
+    "translation_fi": "ottaa",
+    "present": [
+      "prendo",
+      "prendi",
+      "prende",
+      "prendiamo",
+      "prendete",
+      "prendono"
+    ],
+    "noi_present": "prendiamo",
+    "auxiliary": "avere",
+    "past_participle": "preso",
+    "imperative": {
+      "tu": "prendi",
+      "noi": "prendiamo",
+      "voi": "prendete"
+    }
+  },
+  {
+    "infinitive": "vedere",
+    "translation_fi": "nähdä",
+    "present": [
+      "vedo",
+      "vedi",
+      "vede",
+      "vediamo",
+      "vedete",
+      "vedono"
+    ],
+    "noi_present": "vediamo",
+    "auxiliary": "avere",
+    "past_participle": "visto",
+    "imperative": {
+      "tu": "vedi",
+      "noi": "vediamo",
+      "voi": "vedete"
+    }
+  },
+  {
+    "infinitive": "vivere",
+    "translation_fi": "elää",
+    "present": [
+      "vivo",
+      "vivi",
+      "vive",
+      "viviamo",
+      "vivete",
+      "vivono"
+    ],
+    "noi_present": "viviamo",
+    "auxiliary": "avere",
+    "past_participle": "vissuto",
+    "imperative": {
+      "tu": "vivi",
+      "noi": "viviamo",
+      "voi": "vivete"
+    }
+  },
+  {
+    "infinitive": "morire",
+    "translation_fi": "kuolla",
+    "present": [
+      "muoio",
+      "muori",
+      "muore",
+      "moriamo",
+      "morite",
+      "muoiono"
+    ],
+    "noi_present": "moriamo",
+    "auxiliary": "essere",
+    "past_participle": "morto",
+    "imperative": {
+      "tu": "muori",
+      "noi": "moriamo",
+      "voi": "morite"
+    }
+  },
+  {
+    "infinitive": "nascere",
+    "translation_fi": "syntyä",
+    "present": [
+      "nasco",
+      "nasci",
+      "nasce",
+      "nasciamo",
+      "nascete",
+      "nascono"
+    ],
+    "noi_present": "nasciamo",
+    "auxiliary": "essere",
+    "past_participle": "nato",
+    "imperative": {
+      "tu": "nasci",
+      "noi": "nasciamo",
+      "voi": "nascete"
+    }
+  },
+  {
+    "infinitive": "conoscere",
+    "translation_fi": "tuntea, oppia tuntemaan",
+    "present": [
+      "conosco",
+      "conosci",
+      "conosce",
+      "conosciamo",
+      "conoscete",
+      "conoscono"
+    ],
+    "noi_present": "conosciamo",
+    "auxiliary": "avere",
+    "past_participle": "conosciuto",
+    "imperative": {
+      "tu": "conosci",
+      "noi": "conosciamo",
+      "voi": "conoscete"
+    }
+  },
+  {
+    "infinitive": "salire",
+    "translation_fi": "nousta, kiivetä",
+    "present": [
+      "salgo",
+      "sali",
+      "sale",
+      "saliamo",
+      "salite",
+      "salgono"
+    ],
+    "noi_present": "saliamo",
+    "auxiliary": "essere",
+    "past_participle": "salito",
+    "imperative": {
+      "tu": "sali",
+      "noi": "saliamo",
+      "voi": "salite"
+    }
+  },
+  {
+    "infinitive": "cogliere",
+    "translation_fi": "poimia, tavoittaa",
+    "present": [
+      "colgo",
+      "cogli",
+      "coglie",
+      "cogliamo",
+      "cogliete",
+      "colgono"
+    ],
+    "noi_present": "cogliamo",
+    "auxiliary": "avere",
+    "past_participle": "colto",
+    "imperative": {
+      "tu": "cogli",
+      "noi": "cogliamo",
+      "voi": "cogliete"
+    }
+  },
+  {
+    "infinitive": "spegnere",
+    "translation_fi": "sammuttaa",
+    "present": [
+      "spengo",
+      "spegni",
+      "spegne",
+      "spegniamo",
+      "spegnete",
+      "spengono"
+    ],
+    "noi_present": "spegniamo",
+    "auxiliary": "avere",
+    "past_participle": "spento",
+    "imperative": {
+      "tu": "spegni",
+      "noi": "spegniamo",
+      "voi": "spegnete"
+    }
+  }
+]
