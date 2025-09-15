@@ -1,4 +1,3 @@
-
 import streamlit as st
 import json, random, unicodedata
 from dataclasses import dataclass, field
@@ -96,7 +95,7 @@ class Progress:
 
 def load_data() -> List[Verb]:
     if not DATA_FILE.exists():
-        st.error(f"verbs.json ei löytynyt. Lataa samaan kansioon kuin tämä sovellus.")
+        st.error("verbs.json ei löytynyt. Lataa samaan kansioon kuin tämä sovellus.")
         st.stop()
     with open(DATA_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -219,10 +218,13 @@ if not selected_verbs:
     st.warning("Valitse vähintään yksi verbi sivupalkista aloittaaksesi harjoituksen.")
     st.stop()
 
-cards_all = make_cards(selected_verbs, chosen_tenses)
+# --- signature of current selection (so we can auto-rebuild the round if changed) ---
+def selection_signature(selected: List[Verb], tenses: List[str], n: int) -> str:
+    return "|".join([",".join(sorted([v.infinitive for v in selected])),
+                     ",".join(sorted(tenses)),
+                     str(n)])
 
-# Build round set (spaced repetition weighted)
-round_cards = pick_due_cards(cards_all, st.session_state.progress, n_questions)
+sig_now = selection_signature(selected_verbs, chosen_tenses, n_questions)
 
 # Session-state init
 if "idx" not in st.session_state:
@@ -232,30 +234,30 @@ if "correct_count" not in st.session_state:
 if "finished" not in st.session_state:
     st.session_state.finished = False
 if "current_set" not in st.session_state:
-    st.session_state.current_set = round_cards
+    st.session_state.current_set = pick_due_cards(make_cards(selected_verbs, chosen_tenses),
+                                                  st.session_state.progress, n_questions)
+if "selection_sig" not in st.session_state:
+    st.session_state.selection_sig = sig_now
 if "show_hint" not in st.session_state:
     st.session_state.show_hint = False
-# New keys for controlled feedback flow
 if "checked" not in st.session_state:
     st.session_state.checked = False
 if "was_correct" not in st.session_state:
     st.session_state.was_correct = False
 if "last_correct_form" not in st.session_state:
     st.session_state.last_correct_form = ""
-# Keys for MC options and choice persistence
 if "mc_options" not in st.session_state:
-    st.session_state.mc_options = None  # Optional[List[str]]
+    st.session_state.mc_options = None
 if "mc_for_idx" not in st.session_state:
     st.session_state.mc_for_idx = None
 
-def restart_round():
+# --- auto rebuild if selection changed ---
+def rebuild_current_set():
+    st.session_state.current_set = pick_due_cards(make_cards(selected_verbs, chosen_tenses),
+                                                  st.session_state.progress, n_questions)
     st.session_state.idx = 0
     st.session_state.correct_count = 0
     st.session_state.finished = False
-    # rebuild cards based on current selections
-    selected_now = [v for v in verbs if st.session_state.get(f"vb_{v.infinitive}", False)]
-    all_cards_now = make_cards(selected_now, chosen_tenses)
-    st.session_state.current_set = pick_due_cards(all_cards_now, st.session_state.progress, n_questions)
     st.session_state.show_hint = False
     st.session_state.checked = False
     st.session_state.last_correct_form = ""
@@ -263,6 +265,13 @@ def restart_round():
     st.session_state.mc_for_idx = None
     if "mc_choice" in st.session_state:
         st.session_state.pop("mc_choice")
+
+if st.session_state.selection_sig != sig_now:
+    rebuild_current_set()
+    st.session_state.selection_sig = sig_now
+
+def restart_round():
+    rebuild_current_set()
     st.rerun()
 
 def go_next():
@@ -292,9 +301,7 @@ with st.sidebar:
         colA.metric("Oikein", correct)
         colB.metric("Väärin/ohitettu", max(0, idx - correct))
 
-    # Box distribution chart
     st.subheader("Leitner-boxit")
-    # Count distributions 1..5
     counts = {i: 0 for i in range(1, 6)}
     for box in st.session_state.progress.boxes.values():
         counts[box] = counts.get(box, 0) + 1
@@ -336,7 +343,6 @@ correct = expected_form(card)
 if mode == "Kirjoitusharjoitus":
     user_input = st.text_input("Kirjoita oikea muoto", key=f"in_{st.session_state.idx}")
 
-    # Feedback view
     if st.session_state.checked:
         if st.session_state.was_correct:
             st.success("✔ Oikein!")
@@ -372,13 +378,10 @@ if mode == "Kirjoitusharjoitus":
                 go_next()
 
 else:  # Monivalinta
-    # Build stable options for the CURRENT card and keep them until we go to next
     if st.session_state.mc_options is None or st.session_state.mc_for_idx != st.session_state.idx:
         options = {correct}
-        # collect distractors from the pool of all cards
         pool = []
-        # use currently selected verbs only to keep distractors relevant
-        for d in make_cards(selected_verbs, chosen_tenses):
+        for d in make_cards(selected_verbs, TENSES_ALL):
             try:
                 pool.append(expected_form(d))
             except Exception:
@@ -397,7 +400,6 @@ else:  # Monivalinta
             st.session_state.pop("mc_choice")
 
     opts = st.session_state.mc_options
-    # Do not preselect; let user choose
     choice = st.radio("Valitse oikea muoto", opts, index=None, key="mc_choice")
 
     if st.session_state.checked:
@@ -439,3 +441,4 @@ else:  # Monivalinta
                 go_next()
 
 st.caption("Aksentit voi jättää pois: 'è' ≈ 'e'. Edistyminen tallentuu paikallisesti progress.json -tiedostoon.")
+
