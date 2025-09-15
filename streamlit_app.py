@@ -4,6 +4,7 @@ import json, random, unicodedata
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional
 from pathlib import Path
+import pandas as pd
 
 st.set_page_config(page_title="Italiano: epäsäännölliset verbit", page_icon="🇮🇹", layout="centered")
 
@@ -224,7 +225,6 @@ def restart_round():
     st.session_state.last_correct_form = ""
     st.session_state.mc_options = None
     st.session_state.mc_for_idx = None
-    # Remove radio widget state safely (cannot assign None)
     if "mc_choice" in st.session_state:
         st.session_state.pop("mc_choice")
     st.rerun()
@@ -241,6 +241,29 @@ def go_next():
     if st.session_state.idx >= len(st.session_state.current_set):
         st.session_state.finished = True
     st.rerun()
+
+# --- Visible progress in sidebar ---
+with st.sidebar:
+    total = len(st.session_state.current_set) if "current_set" in st.session_state else 0
+    idx = st.session_state.idx if "idx" in st.session_state else 0
+    correct = st.session_state.correct_count if "correct_count" in st.session_state else 0
+
+    st.subheader("Kierroksen eteneminen")
+    if total > 0:
+        st.progress(min(1.0, (idx) / total))
+        st.caption(f"Tehtävä {min(idx+1, total)} / {total}")
+        colA, colB = st.columns(2)
+        colA.metric("Oikein", correct)
+        colB.metric("Väärin/ohitettu", max(0, idx - correct))
+
+    # Box distribution chart
+    st.subheader("Leitner-boxit")
+    # Count distributions 1..5
+    counts = {i: 0 for i in range(1, 6)}
+    for box in st.session_state.progress.boxes.values():
+        counts[box] = counts.get(box, 0) + 1
+    df_counts = pd.DataFrame({"Box": list(counts.keys()), "Määrä": list(counts.values())}).set_index("Box")
+    st.bar_chart(df_counts)
 
 # Restart when settings change
 if st.button("Aloita kierros uusilla asetuksilla"):
