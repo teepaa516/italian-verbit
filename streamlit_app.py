@@ -1,6 +1,6 @@
 
 import streamlit as st
-import json, random, time, unicodedata
+import json, random, unicodedata
 from dataclasses import dataclass, field
 from typing import List, Dict, Optional
 from pathlib import Path
@@ -190,6 +190,7 @@ with st.sidebar:
 cards_all = make_cards(verbs, chosen_tenses)
 round_cards = pick_due_cards(cards_all, st.session_state.progress, n_questions)
 
+# Session-state init
 if "idx" not in st.session_state:
     st.session_state.idx = 0
 if "correct_count" not in st.session_state:
@@ -200,6 +201,13 @@ if "current_set" not in st.session_state:
     st.session_state.current_set = round_cards
 if "show_hint" not in st.session_state:
     st.session_state.show_hint = False
+# New keys for controlled feedback flow
+if "checked" not in st.session_state:
+    st.session_state.checked = False
+if "was_correct" not in st.session_state:
+    st.session_state.was_correct = False
+if "last_correct_form" not in st.session_state:
+    st.session_state.last_correct_form = ""
 
 def restart_round():
     st.session_state.idx = 0
@@ -207,6 +215,18 @@ def restart_round():
     st.session_state.finished = False
     st.session_state.current_set = pick_due_cards(cards_all, st.session_state.progress, n_questions)
     st.session_state.show_hint = False
+    st.session_state.checked = False
+    st.session_state.last_correct_form = ""
+    st.rerun()
+
+def go_next():
+    st.session_state.idx += 1
+    st.session_state.show_hint = False
+    st.session_state.checked = False
+    st.session_state.last_correct_form = ""
+    if st.session_state.idx >= len(st.session_state.current_set):
+        st.session_state.finished = True
+    st.rerun()
 
 # Restart when settings change
 if st.button("Aloita kierros uusilla asetuksilla"):
@@ -242,31 +262,41 @@ correct = expected_form(card)
 
 if mode == "Kirjoitusharjoitus":
     user_input = st.text_input("Kirjoita oikea muoto", key=f"in_{st.session_state.idx}")
-    c1, c2 = st.columns(2)
-    with c1:
-        if st.button("Tarkista"):
-            if normalize(user_input) == normalize(correct):
-                st.success("✔ Oikein!")
-                st.session_state.progress.update(card, True)
-                st.session_state.correct_count += 1
-            else:
-                st.error(f"✘ Väärin. Oikea muoto: **{correct}**")
+
+    # Feedback view
+    if st.session_state.checked:
+        if st.session_state.was_correct:
+            st.success("✔ Oikein!")
+        else:
+            st.error(f"✘ Väärin. Oikea muoto: **{st.session_state.last_correct_form}**")
+
+        c1, c2 = st.columns(2)
+        with c1:
+            if st.button("Seuraava"):
+                go_next()
+        with c2:
+            if st.button("Ohita tämäkin"):
                 st.session_state.progress.update(card, False)
-            save_progress(st.session_state.progress)
-            st.session_state.idx += 1
-            st.session_state.show_hint = False
-            if st.session_state.idx >= len(st.session_state.current_set):
-                st.session_state.finished = True
-            st.rerun()
-    with c2:
-        if st.button("Ohita"):
-            st.session_state.progress.update(card, False)
-            save_progress(st.session_state.progress)
-            st.session_state.idx += 1
-            st.session_state.show_hint = False
-            if st.session_state.idx >= len(st.session_state.current_set):
-                st.session_state.finished = True
-            st.experimental_rerun()
+                save_progress(st.session_state.progress)
+                go_next()
+
+    else:
+        c1, c2 = st.columns(2)
+        with c1:
+            if st.button("Tarkista"):
+                is_ok = normalize(user_input) == normalize(correct)
+                st.session_state.was_correct = is_ok
+                st.session_state.last_correct_form = correct
+                st.session_state.progress.update(card, is_ok)
+                save_progress(st.session_state.progress)
+                st.session_state.checked = True
+                if is_ok:
+                    st.session_state.correct_count += 1
+        with c2:
+            if st.button("Ohita"):
+                st.session_state.progress.update(card, False)
+                save_progress(st.session_state.progress)
+                go_next()
 
 else:  # Monivalinta
     options = {correct}
@@ -276,30 +306,39 @@ else:  # Monivalinta
     opts = list(options)
     random.shuffle(opts)
     choice = st.radio("Valitse oikea muoto", opts, index=0, key=f"mc_{st.session_state.idx}")
-    c1, c2 = st.columns(2)
-    with c1:
-        if st.button("Vastaa"):
-            if normalize(choice) == normalize(correct):
-                st.success("✔ Oikein!")
-                st.session_state.progress.update(card, True)
-                st.session_state.correct_count += 1
-            else:
-                st.error(f"✘ Väärin. Oikea vastaus: **{correct}**")
+
+    if st.session_state.checked:
+        if st.session_state.was_correct:
+            st.success("✔ Oikein!")
+        else:
+            st.error(f"✘ Väärin. Oikea vastaus: **{st.session_state.last_correct_form}**")
+
+        c1, c2 = st.columns(2)
+        with c1:
+            if st.button("Seuraava"):
+                go_next()
+        with c2:
+            if st.button("Ohita tämäkin"):
                 st.session_state.progress.update(card, False)
-            save_progress(st.session_state.progress)
-            st.session_state.idx += 1
-            st.session_state.show_hint = False
-            if st.session_state.idx >= len(st.session_state.current_set):
-                st.session_state.finished = True
-            st.rerun()
-    with c2:
-        if st.button("Ohita"):
-            st.session_state.progress.update(card, False)
-            save_progress(st.session_state.progress)
-            st.session_state.idx += 1
-            st.session_state.show_hint = False
-            if st.session_state.idx >= len(st.session_state.current_set):
-                st.session_state.finished = True
-            st.rerun()
+                save_progress(st.session_state.progress)
+                go_next()
+
+    else:
+        c1, c2 = st.columns(2)
+        with c1:
+            if st.button("Vastaa"):
+                is_ok = normalize(choice) == normalize(correct)
+                st.session_state.was_correct = is_ok
+                st.session_state.last_correct_form = correct
+                st.session_state.progress.update(card, is_ok)
+                save_progress(st.session_state.progress)
+                st.session_state.checked = True
+                if is_ok:
+                    st.session_state.correct_count += 1
+        with c2:
+            if st.button("Ohita"):
+                st.session_state.progress.update(card, False)
+                save_progress(st.session_state.progress)
+                go_next()
 
 st.caption("Aksentit voi jättää pois: 'è' ≈ 'e'. Edistyminen tallentuu paikallisesti progress.json -tiedostoon.")
