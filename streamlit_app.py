@@ -291,7 +291,7 @@ else:  # Monivalinta
             st.session_state.show_hint = False
             if st.session_state.idx >= len(st.session_state.current_set):
                 st.session_state.finished = True
-            st.experimental_rerun()
+            st.rerun()
     with c2:
         if st.button("Ohita"):
             st.session_state.progress.update(card, False)
@@ -300,6 +300,6 @@ else:  # Monivalinta
             st.session_state.show_hint = False
             if st.session_state.idx >= len(st.session_state.current_set):
                 st.session_state.finished = True
-            st.experimental_rerun()
+            st.rerun()
 
 st.caption("Aksentit voi jättää pois: 'è' ≈ 'e'. Edistyminen tallentuu paikallisesti progress.json -tiedostoon.")
